@@ -8,7 +8,9 @@
     "build": "webpack --config webpack.production.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o dist"
+    "build-storybook": "build-storybook -o dist",
+    "predeploy": "npm run build-storybook",
+    "deploy-storybook": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
