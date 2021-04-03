@@ -1,0 +1,1 @@
+(self.webpackChunkglitr_p2p=self.webpackChunkglitr_p2p||[]).push([[347],{347:(e,s,t)=>{"use strict";t.r(s),t.d(s,{default:()=>l});const l=function(){return console.log("this is from the usePeer file")}}}]);

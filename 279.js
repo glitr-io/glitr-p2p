@@ -1,0 +1,1 @@
+(self.webpackChunkglitr_p2p=self.webpackChunkglitr_p2p||[]).push([[279],{279:(e,t,r)=>{"use strict";r.r(t),r.d(t,{default:()=>l});var n=r(985),i=r.n(n);const l=function(){return i().createElement("div",null,"this is the peerProvider")}}}]);
