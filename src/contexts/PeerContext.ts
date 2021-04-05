@@ -1,8 +1,15 @@
 import { createContext } from 'react';
 
-const PeerContext = createContext({
-    count: 0,
-    setCount: (val: number) => { },
-});
+interface ContextProps {
+    peerId?: string,
+    connectedPeers: Map<string, any>
+    joinPeer: (peerId: string) => void
+};
+
+const PeerContext = createContext(({
+    peerId: null,
+    connectedPeers: {},
+    joinPeer: (peerId: string) => {}
+}));
 
 export default PeerContext;

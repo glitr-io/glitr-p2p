@@ -1,11 +1,48 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, useEffect } from 'react';
 import PeerContext from '../contexts/PeerContext';
-git 
+import Peer from 'peerjs';
 
-export default ({ children }) => {
-    const [count, setCount] = useState(0);
+export default ({ children = [] }) => {
+    const [peer] = useState(new Peer());
+    const [peerId, setPeerId] = useState(null);
+    const [connectedPeers, setConnectedPeers] = useState<Map<string, any>>({});
+
+    useEffect(() => {
+        if (peer) {
+            peer.on('open', (id: string) => {
+                console.log('My peer ID is: ' + id);
+                setPeerId(id);
+            });
+        
+            peer.on('connection', function(conn) {
+                console.log('someone connected', { conn });
+        
+                conn.on('open', function() {
+                // Receive messages
+                    conn.on('data', function(data) {
+                        console.log('Received', data);
+                    });
+                    
+                    // Send messages
+                    conn.send('Hello!');
+                });
+                // setPeerConnection(conn);
+            });
+        
+            // peer.on('data', (conn: any) => {
+            //     console.log('some data recieved', { conn });
+            // });
+        }
+    }, [peer]);
+
+    const joinPeer = (peerId: string) => {
+        console.log('joining peer');
+        const connection = peer.connect(peerId);
+        setConnectedPeers(({ ...connectedPeers, peerId: connection }));
+    }
+
     return (
-        <PeerContext.Provider value={{ count, setCount }}>
+        <PeerContext.Provider value={{ peerId, connectedPeers, joinPeer }}>
             this is the peerProvider<br />
             {children}
         </PeerContext.Provider>
