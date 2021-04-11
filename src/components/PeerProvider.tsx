@@ -5,7 +5,7 @@ import Peer from 'peerjs';
 export default ({ children = [] }) => {
     const [peer] = useState(new Peer());
     const [peerId, setPeerId] = useState(null);
-    const [connectedPeers, setConnectedPeers] = useState<Map<string, any>>({});
+    const [connectedPeers, setConnectedPeers] = useState({});
 
     useEffect(() => {
         if (peer) {
@@ -13,24 +13,18 @@ export default ({ children = [] }) => {
                 console.log('My peer ID is: ' + id);
                 setPeerId(id);
             });
-        
-            peer.on('connection', function(conn) {
-                console.log('someone connected', { conn });
-        
-                conn.on('open', function() {
-                // Receive messages
-                    conn.on('data', function(data) {
-                        console.log('Received', data);
-                    });
-                    
-                    // Send messages
-                    conn.send('Hello!');
+
+            peer.on('connection', function (connection) {
+                console.log('someone connected', { connection });
+
+                connection.on('open', function () {
+                    setConnectedPeers({ ...connectedPeers, [connection.peer]: connection })
                 });
                 // setPeerConnection(conn);
             });
-        
+
             // peer.on('data', (conn: any) => {
-            //     console.log('some data recieved', { conn });
+            //     console.log('some data rec~ieved', { conn });
             // });
         }
     }, [peer]);
@@ -38,7 +32,7 @@ export default ({ children = [] }) => {
     const joinPeer = (peerId: string) => {
         console.log('joining peer');
         const connection = peer.connect(peerId);
-        setConnectedPeers(({ ...connectedPeers, peerId: connection }));
+        setConnectedPeers(({ ...connectedPeers, [connection.peer]: connection }));
     }
 
     return (

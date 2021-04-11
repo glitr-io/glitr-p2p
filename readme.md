@@ -39,8 +39,8 @@ const YourChildComsumer = {
         },
     ];
 
-    const [peerToConnect, setPeerToConnect] = useState('')
     const [peerConnection, joinPeer] = usePeer(apiSchema)
+    const [peerToConnect, setPeerToConnect] = useState('')
     const [messageToSend, setMessageToSend] = useState('')
 
     return (
