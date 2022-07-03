@@ -6,6 +6,7 @@ export default ({ children = [] }) => {
     const [peer] = useState(new Peer());
     const [peerId, setPeerId] = useState(null);
     const [connectedPeers, setConnectedPeers] = useState({});
+    const [rooms, setRooms] = useState([]);
 
     useEffect(() => {
         if (peer) {
@@ -35,8 +36,13 @@ export default ({ children = [] }) => {
         setConnectedPeers(({ ...connectedPeers, [connection.peer]: connection }));
     }
 
+    const createRoom = () => setRooms({...rooms, [rooms.length]: { id: rooms.length, peers: [] }});
+    const inviteToRoom = (roomId: number, peerId: string) => {
+        // need to add this part
+    }
+
     return (
-        <PeerContext.Provider value={{ peerId, connectedPeers, joinPeer }}>
+        <PeerContext.Provider value={{ peerId, peers, joinPeer }}>
             this is the peerProvider<br />
             {children}
         </PeerContext.Provider>
