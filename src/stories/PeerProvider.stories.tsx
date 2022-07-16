@@ -8,8 +8,17 @@ export default {
     component: PeerProvider,
 } as Meta;
 
-const Template: Story = (args) => <PeerProvider {...args}>
-  <TestConsumer />
+const appiSchema: any = [
+  {
+    type: 'SEND_MESSAGE',
+    handler: [(req, res, next) => { 
+      console.log('got a message', req);
+      res.send(req.body);
+    }]
+  }
+]
+
+const Template: Story = (args) => <PeerProvider {...args} appiSchema={appiSchema}>
   <TestConsumer />
 </PeerProvider>;
 

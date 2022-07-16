@@ -3,18 +3,12 @@ import usePeer from '../hooks/usePeer'
 
 const TestConsumer = () => {
     const [peerToConnect, setPeerToConnect] = useState('')
-    const { peer } = usePeer(peerToConnect);
+    const { peer, peers } = usePeer(peerToConnect);
     const [messageToSend, setMessageToSend] = useState('')
 
     useEffect(() => {
-        if (peer) {
-            peer.on('open', () => {
-                peer.on('data', (data: any, payload: any) => console.log('some data recieved:', data, payload));
-                peer.on('data', (data: any, payload: any) => console.log('some data recieved!!!!:', data, payload));
-                peer.on('data', (data: any, payload: any) => console.log('some data recieved??????:', data, payload));
-            })
-        }
-    }, [peer])
+        setMessageToSend('')
+    }, [peers]);
 
     return (
         <div>
@@ -34,12 +28,41 @@ const TestConsumer = () => {
 
             <button
                 onClick={() => peer && peer
-                    .send({
+                    .SEND_MESSAGE({
                         type: 'SEND_MESSAGE',
                         message: messageToSend
                     })
                 }
             >send message</button>
+
+            {peers?.map((peer) => (
+                <div key={peer.id}>
+                    <input
+                        type="text"
+                        defaultValue={peer.id}
+                        disabled
+                    />
+
+                    {/* <button onClick={() => joinPeer(peerToConnect)}>connect to peer</button> */}
+
+                    <input
+                        type="text"
+                        onChange={({ target: { value } }) => setMessageToSend(value)}
+                        value={messageToSend}
+                    />
+
+                    <button
+                        onClick={() => peer && peer
+                            .SEND_MESSAGE({
+                                type: 'SEND_MESSAGE',
+                                message: messageToSend
+                            })
+                        }
+                    >send message</button>
+                </div>
+            ))}
+
+
         </div>
     )
 };

@@ -34,14 +34,13 @@ const App = {
 
 ```
 
-# p2p-connection.js
+# connecting and sending a message to a peer
 ```js
 import React, { useState } from 'react'
 import usePeer from 'glitr-p2p/usePeer'
 
 const YourChildComsumer = () => {
-
-    const { joinPeer, peers, createRoom, rooms } = useGlitrP2P(apiSchema)
+    const { joinPeer, peers } = usePeer()
     const [peerToConnect, setPeerToConnect] = useState('')
     const [messageToSend, setMessageToSend] = useState('')
 
@@ -75,17 +74,27 @@ const YourChildComsumer = () => {
                 value={peerToConnect}
             />
 
-            <button onClick={() => joinPeer(peerToConnect)}>connect to peer</button>
-
-            <input
-                type="text"
-                onChange={({ target: value }) => setMessageToSend(value)}
-                value={messageToSend}
-            >
-
             <button
-                onClick={() => sendMessageToPeer(peerToConnect, messageToSend)}
-            >send message</button>
+                onClick={() => joinPeer(peerToConnect)}
+            >connect to peer</button>
+
+            {peers && peers.map(peer => {
+                const  [messageToSend, setSessageToSend] = useState('')
+                return (
+                    <>
+                        <span>connection to: {peer.id}</span>
+                        <input
+                            type="text"
+                            onChange={({ target: value }) => setMessageToSend(value)}
+                            defaultValue={messageToSend}
+                        >
+            
+                        <button
+                            onClick={() => peer.SEND_MESSAGE({some: 'data'})}
+                        >send message</button>
+                    </>
+                )
+            })}
         </>
     )
 }
@@ -104,7 +113,6 @@ const YourChildComsumer = () => {
     const [roomToJoin, setRoomToJoin] = useState('')
     const [roomForInviting, setRoomForInviting] = useState('')
     const [setRoomForInviting, setRoomForInviting] = useState('')
-    
 
     useEffect(() => {
         if (Object.keys(rooms)) {
@@ -172,3 +180,85 @@ const YourChildComsumer = () => {
     )
 }
 ```
+
+
+examples to create
+
+- sending message between 2 users
+
+```js
+import React from 'react'
+import { useP2P } from 'glitr-p2p'
+
+const P2PChat = () => {
+    const [messages, setMessages] = useState[];
+    const [currentMessage, setCurrentMessage] = useState[];
+    const [peerToConnect, setPeerToConnect] = useState[];
+    const { peer, connectToPeer } = useP2P();
+
+    useEffect(() => {
+        if (peer) {
+            peer.recieve
+                .message([
+                    (req) => {
+                        setMessages([
+                            ...messages,
+                            { from: peer.id, message: req.data }
+                        ])
+                    }
+                ])
+        }
+
+    }, [peer]);
+
+    const handleSendMessage = () => {
+        if (peer) {
+            peer.send.message(currentMessage)
+                .then(response => console.log({ response }))
+                .catch(error => console.log({ error }));
+            setCurrentMessage('')
+        }
+    };
+
+    return !peer
+        ? (
+            <input
+                type="text"
+                onChange={({ target: value }) => setPeerToConnect(value)}
+                value={peerToConnect}
+            />
+            <button onClick={() => connectToPeer(peerToConnect)}>connect</button>
+        )
+        : (
+            {messages.map(a => a)}
+
+            <input
+                type="text"
+                onChange={({ target: value }) => setPeerToConnect(value)}
+                value={currentValue}
+            />
+            <button onClick={handleSendMessage}>send</button>
+        )
+}
+
+```
+
+- creating and removing a room
+
+```
+
+```
+
+- sending meesage to participants in a room
+
+```
+
+```
+
+
+
+things to create
+    - chat ui
+    - ability to create room
+    - ability to communicate with peer after disconnecting from server.
+        - create broker-server disconnect functionality
