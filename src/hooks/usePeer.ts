@@ -3,42 +3,33 @@ import PeerContext from '../contexts/PeerContext'
 
 export default (peerToConnect?: string) => {
     const [peer, setPeer] = useState(null);
+    const context = useContext(PeerContext);
     const {
         peerId,
         connectedPeers,
-        joinPeer
-    } = useContext(PeerContext);
+        peers,
+        joinPeer,
+        createRoom,
+        inviteToRoom,
+        rooms
+    } = context;
+
+    console.log('inside usePeer():', { peerId, connectedPeers, peers, peerToConnect });
 
     useEffect(() => {
-        if (peerToConnect && !connectedPeers[peerToConnect]) {
+        if (peerToConnect && !Object.keys(peers).includes(peerToConnect)) {
             joinPeer(peerToConnect)
         }
     }, [peerToConnect]);
 
     useEffect(() => {
-        if (peerToConnect && connectedPeers[peerToConnect]) {
-            setPeer(connectedPeers[peerToConnect]);
+        if (peerToConnect && Object.keys(peers).includes(peerToConnect)) {
+            setPeer(peers.find(peer => peer.id === peerToConnect));
         }
-    }, [connectedPeers, peerToConnect])
+    }, [peers, peerToConnect])
 
-    console.log('this is from the usePeer file', {
-        peerId,
-        connectedPeers,
-        joinPeer
-    });
-
-    // const [peer, setPeer] = useState(null);
-
-    // if (!peer && peerToConnect) {
-    //     debugger;
-    //     joinPeer(peerToConnect)
-    // } else {
-    //     debugger;
-    //     setPeer(peerToConnect ? connectedPeers[peerToConnect] : null);
-    // }
     return {
-        peer,
-        count: 22,
-        setCount: () => console.log('hello world')
+        ...context,
+        peer
     };
 };
